@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <!--searchView layout-->
+
     <RelativeLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"

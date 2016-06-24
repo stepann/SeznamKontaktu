@@ -47,13 +47,13 @@ public class SplashFragment extends Fragment {
             public void run() {
                 ((MainActivity) getActivity()).showFragment(new ContactListFragment(), "CONTACT");
             }
-        }, 1000);
+        }, 2000);
 
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("splash", true);
+        //outState.putBoolean("splash", true);
         super.onSaveInstanceState(outState);
     }
 }
