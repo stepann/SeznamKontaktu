@@ -8,18 +8,20 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
-    <!-- is good to have imageView - to show first letter or user's picture? -->
-    <!-- <ImageView
-        android:id="@+id/firstLetter"
+    <!--<data
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp" /> -->
+        android:layout_height="wrap_content">
+        <variable
+            name="contact"
+            type="com.seznam_kontaktu.seznamkontaktu.Model.Contact"/>
+    </data>-->
 
-    <TextView
-        android:id="@+id/contact_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+     <TextView
+         android:paddingLeft="10dp"
+         android:textSize="25sp"
+         android:id="@+id/contact_name"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"/>
 
-</LinearLayout>
+ </LinearLayout>
+

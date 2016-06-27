@@ -4,41 +4,41 @@ import com.orm.SugarRecord;
 
 public class Contact extends SugarRecord {
 
-    private String mName;
-    private String mNumber;
-    private String mEmail;
+    private String NAME;
+    private String NUMBER;
+    private String EMAIL;
 
     public Contact() {
     }
 
-
-    public Contact(String name, String number, String email) {
-        this.mName = name;
-        this.mNumber = number;
-        this.mEmail = email;
+    public Contact(String NAME, String EMAIL, String NUMBER) {
+        this.NAME = NAME;
+        this.EMAIL = EMAIL;
+        this.NUMBER = NUMBER;
     }
 
-    public String getName() {
-        return mName;
+    public String getNAME() {
+        return NAME;
     }
 
-    public void setName(String name) {
-        this.mName = name;
+    public void setNAME(String NAME) {
+        this.NAME = NAME;
     }
 
-    public String getEmail() {
-        return mEmail;
+    public String getEMAIL() {
+        return EMAIL;
     }
 
-    public void setEmail(String email) {
-        this.mEmail = email;
+    public void setEMAIL(String EMAIL) {
+        this.EMAIL = EMAIL;
     }
 
-    public String getNumber() {
-        return mNumber;
+    public String getNUMBER() {
+        return NUMBER;
     }
 
-    public void setNumber(String number) {
-        this.mNumber = number;
+    public void setNUMBER(String NUMBER) {
+        this.NUMBER = NUMBER;
     }
 }
+

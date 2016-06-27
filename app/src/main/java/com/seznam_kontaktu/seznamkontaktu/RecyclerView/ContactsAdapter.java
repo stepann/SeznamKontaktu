@@ -9,63 +9,48 @@ import android.widget.TextView;
 
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactListFragment;
 
 import java.util.List;
 
-public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactVH> {
 
-        //infate the layout
-        View contactView = layoutInflater.inflate(R.layout.item_contact, parent, false);
+    List<Contact> contact;
+    Context context;
 
-        //View holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+    public ContactsAdapter(Context context, List<Contact> contact) {
+        this.contact = contact;
+        this.context = context;
+    }
+
+     @Override
+     public ContactVH onCreateViewHolder(ViewGroup parent, int viewType) {
+         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
+         ContactVH viewHolder = new ContactVH(view);
+         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ContactsAdapter.ViewHolder viewHolder, int position) {
-
-        //Get the data model based on position
-        Contact contact = mContacts.get(position);
-
-        //Set textview - name
-        TextView textView = viewHolder.nameTextView;
-        textView.setText(contact.getName());
-
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView nameTextView;
-        //public ImageView icon;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            nameTextView = (TextView)itemView.findViewById(R.id.contact_name);
-            //image here?
-        }
-
-    }
-    private List<Contact> mContacts;
-    private Context mContext;
-
-    public ContactsAdapter(Context context, List<Contact> contacts) {
-        mContext = context;
-        mContacts = contacts;
-    }
-    private Context getContext() {
-        return mContext;
+    public void onBindViewHolder(ContactVH holder, int position) {
+        holder.NAME.setText(contact.get(position).getNAME());
     }
 
     @Override
     public int getItemCount() {
-        return mContacts.size();
+        return contact.size();
     }
 
+    class ContactVH extends RecyclerView.ViewHolder {
+        @BindView(R.id.contact_name) TextView NAME;
 
+        public ContactVH(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+    }
 }
+

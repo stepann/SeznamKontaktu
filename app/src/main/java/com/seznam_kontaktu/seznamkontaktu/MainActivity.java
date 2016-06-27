@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.SplashFragment;
 
 
@@ -21,9 +22,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //toolbar
-        myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
+        //show fragment, if fragment has already existed, find by TAG
         if(savedInstanceState == null) {
             showFragment(new SplashFragment(), SPLESH);
         } else {
@@ -34,14 +36,12 @@ public class MainActivity extends AppCompatActivity {
     public void showFragment(Fragment fragment, String TAG) {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, fragment, TAG).addToBackStack("").commit();
     }
-
     @Override
     //Menu item icons
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
