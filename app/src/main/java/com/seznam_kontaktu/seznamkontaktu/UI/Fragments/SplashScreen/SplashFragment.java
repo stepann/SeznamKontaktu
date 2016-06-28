@@ -1,4 +1,4 @@
-package com.seznam_kontaktu.seznamkontaktu.UI.Fragments;
+package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.SplashScreen;
 
 
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.R;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 
 import butterknife.ButterKnife;
 
@@ -18,7 +19,6 @@ public class SplashFragment extends Fragment {
     public static SplashFragment newInstance() {
 
         Bundle args = new Bundle();
-
         SplashFragment fragment = new SplashFragment();
         fragment.setArguments(args);
         return fragment;
@@ -29,7 +29,6 @@ public class SplashFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
         return view;
     }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -43,12 +42,9 @@ public class SplashFragment extends Fragment {
                 ((MainActivity) getActivity()).showFragment(new ContactListFragment(), "CONTACT");
             }
         }, 2000);
-
     }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        //outState.putBoolean("splash", true);
         super.onSaveInstanceState(outState);
     }
 }

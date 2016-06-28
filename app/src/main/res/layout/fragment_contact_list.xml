@@ -5,15 +5,7 @@
     android:orientation="vertical">
 
     <!--searchView layout-->
-    <RelativeLayout
-        android:id="@+id/search_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/colorPrimary"
-        android:padding="@dimen/activity_horizontal_margin">
-
-        <android.support.v7.widget.SearchView
+    <android.support.v7.widget.SearchView
             android:id="@+id/search_view"
             android:iconifiedByDefault="false"
             android:layout_width="match_parent"
@@ -22,12 +14,9 @@
             app:searchIcon="@drawable/ic_search_white_24dp"
             app:queryHint="@string/search_contact"
             app:iconifiedByDefault="false"
-
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    </RelativeLayout>
-
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"

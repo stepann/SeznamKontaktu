@@ -1,4 +1,5 @@
-package com.seznam_kontaktu.seznamkontaktu.RecyclerView;
+package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.RecyclerView;
+
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
-import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactListFragment;
 
 import java.util.List;
 
@@ -26,16 +26,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         this.context = context;
     }
 
-     @Override
-     public ContactVH onCreateViewHolder(ViewGroup parent, int viewType) {
-         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
-         ContactVH viewHolder = new ContactVH(view);
-         return viewHolder;
+    @Override
+    public ContactVH onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_contact, parent, false);
+        ContactVH viewHolder = new ContactVH(view);
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ContactVH holder, int position) {
-        holder.NAME.setText(contact.get(position).getNAME());
+        holder.name.setText(contact.get(position).getName());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     }
 
     class ContactVH extends RecyclerView.ViewHolder {
-        @BindView(R.id.contact_name) TextView NAME;
+        @BindView(R.id.contact_name) TextView name;
 
         public ContactVH(View itemView) {
             super(itemView);
@@ -53,4 +53,3 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     }
 }
-

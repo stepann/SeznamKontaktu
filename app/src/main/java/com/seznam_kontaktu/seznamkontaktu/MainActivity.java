@@ -6,15 +6,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.SplashFragment;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.SplashScreen.SplashFragment;
 
 
 public class MainActivity extends AppCompatActivity {
 
     Toolbar myToolbar;
 
-    private static final String SPLESH = "splesh";
-    private static final String CONTACT = "contact";
+    public static final String SPLESH = "splesh";
+    public static final String CONTACT = "contact";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         myToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        //show fragment, if fragment has already existed, find by TAG
+        //show fragment, if the fragment has already existed, find by TAG
         if(savedInstanceState == null) {
             showFragment(new SplashFragment(), SPLESH);
         } else {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showFragment(Fragment fragment, String TAG) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, fragment, TAG).addToBackStack("").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, fragment, TAG).commit();
     }
     @Override
     //Menu item icons
