@@ -1,7 +1,9 @@
 package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList;
 
 import android.os.Bundle;
+import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,7 @@ import butterknife.ButterKnife;
 
 public class ContactListFragment extends Fragment {
 
+    FloatingActionButton fabButton;
     SearchView searchView;
     RecyclerView recyclerView;
     ContactsAdapter contactsAdapter;
@@ -38,6 +41,7 @@ public class ContactListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
 
         searchView = (SearchView)view.findViewById(R.id.search_view);
+        fabButton = (FloatingActionButton)view.findViewById(R.id.fab_button);
 
         //recycler view
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);

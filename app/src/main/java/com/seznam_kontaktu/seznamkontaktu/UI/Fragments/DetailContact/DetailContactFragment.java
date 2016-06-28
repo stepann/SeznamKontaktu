@@ -1,4 +1,4 @@
-package com.seznam_kontaktu.seznamkontaktu.UI.Fragments;
+package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.DetailContact;
 
 
 import android.os.Bundle;

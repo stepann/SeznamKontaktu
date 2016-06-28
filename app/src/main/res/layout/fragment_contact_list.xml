@@ -31,6 +31,7 @@
 
         <!-- floating action button -->
         <android.support.design.widget.FloatingActionButton
+            app:layout_behavior="com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.FabButtonBehavior"
             android:id="@+id/fab_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
