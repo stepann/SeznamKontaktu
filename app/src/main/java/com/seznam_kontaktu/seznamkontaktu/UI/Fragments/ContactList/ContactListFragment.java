@@ -1,33 +1,40 @@
 package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList;
 
 import android.os.Bundle;
-import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.orm.SugarRecord;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
-import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.RecyclerView.ContactsAdapter;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
 
+import java.nio.channels.NonWritableChannelException;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.ButterKnife;
 
-public class ContactListFragment extends Fragment {
+public class ContactListFragment extends Fragment implements View.OnClickListener {
 
+    private static final String NEWCONTACT = "newcontact";
     FloatingActionButton fabButton;
     SearchView searchView;
     RecyclerView recyclerView;
     ContactsAdapter contactsAdapter;
-    List<Contact> contacts = new ArrayList<>();
+    List<Contact> mContact = new ArrayList<>();
 
     public static ContactListFragment newInstance() {
         Bundle args = new Bundle();
@@ -36,22 +43,29 @@ public class ContactListFragment extends Fragment {
         return fragment;
     }
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
 
-        searchView = (SearchView)view.findViewById(R.id.search_view);
-        fabButton = (FloatingActionButton)view.findViewById(R.id.fab_button);
+        searchView = (SearchView) view.findViewById(R.id.search_view);
+        fabButton = (FloatingActionButton) view.findViewById(R.id.fab_button);
+        fabButton.setOnClickListener(this);
 
-        //recycler view
-        recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        contacts = SugarRecord.listAll(Contact.class);
-        contactsAdapter = new ContactsAdapter(getActivity(), contacts);
+        mContact = SugarRecord.listAll(Contact.class);
+        contactsAdapter = new ContactsAdapter(getActivity(), mContact);
         recyclerView.setAdapter(contactsAdapter);
+
+        inputFilter();
 
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -63,8 +77,47 @@ public class ContactListFragment extends Fragment {
         //show title
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
-}
+
+    public void inputFilter() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                contactsAdapter.filterList(newText);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    //fab button listener
+    public void onClick(View v) {
+        ((MainActivity)getActivity()).showFragment(new NewContactFragment(), NEWCONTACT);
+
+        }
+
+    @Override
+    //ActionBar icons
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_filter) {
+            //TODO: filter by the first name letter
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    }
+
+

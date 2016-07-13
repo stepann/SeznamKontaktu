@@ -1,0 +1,51 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment">
+
+    <ImageView
+        android:id="@+id/iv_person_image"
+        android:clickable="true"
+        android:src="@drawable/ic_perm_identity_black_48dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:layout_width="170dp"
+        android:layout_height="93dp"
+        android:layout_gravity="center_horizontal|top"/>
+
+    <LinearLayout
+        android:layout_marginTop="165dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <EditText
+            android:id="@+id/ed_name"
+            android:inputType="textPersonName"
+            android:hint="@string/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/ed_number"
+            android:inputType="phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/telephone_number"/>
+
+        <EditText
+            android:id="@+id/ed_email"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"/>
+
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

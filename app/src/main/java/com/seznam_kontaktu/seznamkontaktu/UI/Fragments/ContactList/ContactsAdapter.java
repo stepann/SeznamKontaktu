@@ -1,4 +1,4 @@
-package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.RecyclerView;
+package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList;
 
 
 import android.content.Context;
@@ -18,12 +18,16 @@ import butterknife.ButterKnife;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactVH> {
 
-    List<Contact> contact;
-    Context context;
+    List<Contact> mContact;
+    List<Contact> mContactFilter;
+    SearchViewFilter filter;
+    Context mContext;
 
     public ContactsAdapter(Context context, List<Contact> contact) {
-        this.contact = contact;
-        this.context = context;
+        this.mContact = contact;
+        this.mContactFilter = contact;
+        this.mContext = context;
+        filter = new SearchViewFilter(mContact, this);
     }
 
     @Override
@@ -35,16 +39,25 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     @Override
     public void onBindViewHolder(ContactVH holder, int position) {
-        holder.name.setText(contact.get(position).getName());
+        holder.name.setText(mContactFilter.get(position).getName());
+    }
+
+    public void setList(List<Contact> list) {
+        this.mContactFilter = list;
+    }
+
+    public void filterList(String text) {
+        filter.filter(text);
     }
 
     @Override
     public int getItemCount() {
-        return contact.size();
+        return mContactFilter.size();
     }
 
     class ContactVH extends RecyclerView.ViewHolder {
-        @BindView(R.id.contact_name) TextView name;
+        @BindView(R.id.contact_name)
+        TextView name;
 
         public ContactVH(View itemView) {
             super(itemView);
