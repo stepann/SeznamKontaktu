@@ -48,8 +48,8 @@ public class SplashFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment(), CONTACT).commit();
+                //((MainActivity) getActivity()).showFragment(new ContactListFragment(), CONTACT);
+                getFragmentManager().beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment(), CONTACT).commit();
 
             }
         }, 1500);

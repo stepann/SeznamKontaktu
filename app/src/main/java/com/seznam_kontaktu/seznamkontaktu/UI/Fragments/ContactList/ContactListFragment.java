@@ -1,7 +1,6 @@
 package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList;
 
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -9,22 +8,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.orm.SugarContext;
 import com.orm.SugarRecord;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
 
-import java.nio.channels.NonWritableChannelException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +29,7 @@ import butterknife.ButterKnife;
 
 public class ContactListFragment extends Fragment implements View.OnClickListener {
 
-    private static final String TAG = "newcontact";
-    private Contact contact;
+    private static final String NEWCONTACT = "newcontact";
 
     FloatingActionButton fabButton;
     SearchView searchView;
@@ -69,16 +65,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
 
         inputFilter();
 
-        /*try {
-            contact = DataCache.getInstance().pop(Contact.class);
-        } catch (NullPointerException e) {
-            Log.i("null", "nullpointer");
-        }
-
-        if(contact != null) {
-            mContact.add(contact);
-        }*/
-
         return view;
     }
 
@@ -91,7 +77,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         ((MainActivity) getActivity()).getSupportActionBar().show();
         //show title
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-
     }
 
     @Override
@@ -99,25 +84,10 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         super.onSaveInstanceState(outState);
     }
 
-    public void inputFilter() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                contactsAdapter.filterList(newText);
-                return true;
-            }
-        });
-    }
-
     @Override
     //Fab button listener
     public void onClick(View v) {
-        ((MainActivity) getActivity()).showFragment(new NewContactFragment(), TAG);
+        ((MainActivity) getActivity()).showFragment(new NewContactFragment(), NEWCONTACT);
     }
 
     @Override
@@ -133,7 +103,19 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         }
         return super.onOptionsItemSelected(item);
     }
-
+    public void inputFilter() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                contactsAdapter.filterList(newText);
+                return true;
+            }
+        });
+    }
 }
 
 

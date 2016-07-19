@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         //show fragment, if the fragment has already existed, find by TAG
         if (savedInstanceState == null) {
-            showFragment(new SplashFragment(), SPLESH);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, new SplashFragment(), SPLESH).commit();
+
         } else {
             getSupportFragmentManager().findFragmentByTag(CONTACT);
         }

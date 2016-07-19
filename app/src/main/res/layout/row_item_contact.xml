@@ -12,14 +12,12 @@
         android:orientation="horizontal">
 
         <!-- TODO: First letter big -->
-
         <TextView
             android:paddingLeft="10dp"
-            android:textSize="25sp"
+            android:textSize="23sp"
             android:id="@+id/contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-
     </LinearLayout>
 
     <View

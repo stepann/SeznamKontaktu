@@ -1,18 +1,22 @@
 <resources>
     <string name="app_name">Seznam kontaktů</string>
 
-    <!--actionBar main_menu-->
+    <!--start main-->
     <string name="action_sort">Seřadit</string>
     <string name="search_contact">Vyhledat kontakt</string>
-    <string name="action_favourite">Oblíbené</string>
+    <string name="action_favourite">Označit jako oblíbený</string>
     <string name="action_done">Uložit</string>
+    <!--end main-->
 
-    <!--dialog new contact-->
-    <string name="new_contact">Nový kontakt</string>
+    <!--start new_contact_fragment-->
+    <string name="create_new_contact">Nový kontakt</string>
     <string name="save_contact">Uložit</string>
     <string name="name">Jméno</string>
     <string name="telephone_number">Telefonní číslo</string>
     <string name="email">Email</string>
     <string name="cancel">Zrušit</string>
+    <string name="empty_name">Doplň jméno</string>
+    <string name="empty_number">Doplň telefonní číslo</string>
+    <!--end start new_contact_fragment-->
 
 </resources>
