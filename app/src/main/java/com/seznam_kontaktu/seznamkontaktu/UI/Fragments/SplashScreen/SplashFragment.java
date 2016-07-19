@@ -23,6 +23,8 @@ import butterknife.ButterKnife;
 
 public class SplashFragment extends Fragment {
 
+    public static final String CONTACT = "contact";
+
     public static SplashFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -47,10 +49,10 @@ public class SplashFragment extends Fragment {
             @Override
             public void run() {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment(), "contact").commit();
+                fragmentManager.beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment(), CONTACT).commit();
 
             }
-        }, 2000);
+        }, 1500);
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {

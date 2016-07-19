@@ -63,6 +63,5 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
     }
 }

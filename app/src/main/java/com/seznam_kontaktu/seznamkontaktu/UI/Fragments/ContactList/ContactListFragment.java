@@ -1,6 +1,7 @@
 package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -8,12 +9,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.orm.SugarRecord;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
@@ -29,7 +32,9 @@ import butterknife.ButterKnife;
 
 public class ContactListFragment extends Fragment implements View.OnClickListener {
 
-    private static final String NEWCONTACT = "newcontact";
+    private static final String TAG = "newcontact";
+    private Contact contact;
+
     FloatingActionButton fabButton;
     SearchView searchView;
     RecyclerView recyclerView;
@@ -47,6 +52,7 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
@@ -63,6 +69,16 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
 
         inputFilter();
 
+        /*try {
+            contact = DataCache.getInstance().pop(Contact.class);
+        } catch (NullPointerException e) {
+            Log.i("null", "nullpointer");
+        }
+
+        if(contact != null) {
+            mContact.add(contact);
+        }*/
+
         return view;
     }
 
@@ -73,9 +89,9 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
 
         //show actionBar
         ((MainActivity) getActivity()).getSupportActionBar().show();
-
         //show title
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+
     }
 
     @Override
@@ -99,25 +115,25 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    //fab button listener
+    //Fab button listener
     public void onClick(View v) {
-        ((MainActivity)getActivity()).showFragment(new NewContactFragment(), NEWCONTACT);
-
-        }
+        ((MainActivity) getActivity()).showFragment(new NewContactFragment(), TAG);
+    }
 
     @Override
-    //ActionBar icons
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.main_menu, menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_filter) {
-            //TODO: filter by the first name letter
+        if (item.getItemId() == R.id.action_filter) {
+            //TODO: sort by the first letter = A-Z
         }
         return super.onOptionsItemSelected(item);
     }
-    }
+
+}
 
 

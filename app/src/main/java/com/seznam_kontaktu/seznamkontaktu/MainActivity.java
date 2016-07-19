@@ -1,5 +1,6 @@
 package com.seznam_kontaktu.seznamkontaktu;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         //show fragment, if the fragment has already existed, find by TAG
         if (savedInstanceState == null) {
             showFragment(new SplashFragment(), SPLESH);
-
         } else {
             getSupportFragmentManager().findFragmentByTag(CONTACT);
         }
@@ -47,11 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }
 

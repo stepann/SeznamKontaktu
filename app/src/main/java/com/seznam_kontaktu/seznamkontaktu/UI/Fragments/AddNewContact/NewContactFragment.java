@@ -1,7 +1,10 @@
 package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,30 +23,39 @@ import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.DataCache;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.SearchViewFilter;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.SplashScreen.SplashFragment;
 
 import butterknife.ButterKnife;
 
 public class NewContactFragment extends Fragment {
 
-
     EditText name, number, email;
-    String mName, mNumber, mEmail;
+    public String mName;
+    public String mNumber;
+    public String mEmail;
+    boolean isFavourite = false;
 
     public NewContactFragment() {
         // Required empty public constructor
     }
-    public static NewContactFragment newInstance(String param1, String param2) {
+
+    public static NewContactFragment newInstance() {
         NewContactFragment fragment = new NewContactFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
+
         return fragment;
+
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -58,9 +70,9 @@ public class NewContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_contact, container, false);
 
-        name = (EditText)view.findViewById(R.id.ed_name);
-        number = (EditText)view.findViewById(R.id.ed_number);
-        email = (EditText)view.findViewById(R.id.ed_email);
+        name = (EditText) view.findViewById(R.id.ed_name);
+        number = (EditText) view.findViewById(R.id.ed_number);
+        email = (EditText) view.findViewById(R.id.ed_email);
 
         mName = name.getText().toString();
         mNumber = number.getText().toString();
@@ -68,22 +80,23 @@ public class NewContactFragment extends Fragment {
 
         return view;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.new_contact_menu, menu);
     }
-    boolean isFavourite = false;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                //TODO: safe editTexts and return to ContactListFragment
-                /*Contact contact = new Contact(mName,mNumber,mEmail,isFavourite);
-                contact.save();*/
+                /*Contact contact = new Contact(mName, mNumber, mEmail, isFavourite);
+                DataCache.getInstance().push(contact);
+                ((MainActivity) getActivity()).showFragment(new ContactListFragment(), "contact");*/
                 break;
+
             case R.id.action_favourite:
                 getActivity().invalidateOptionsMenu();
-                Toast.makeText(getContext(), "isFavourite is: " + isFavourite, Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -91,16 +104,18 @@ public class NewContactFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if(isFavourite) {
+        if (isFavourite) {
             menu.getItem(0).setIcon(R.drawable.ic_star_white_24dp);
             isFavourite = false;
-        }
-        else {
+        } else {
             menu.getItem(0).setIcon(R.drawable.ic_star_border_white_24dp);
             isFavourite = true;
         }
         super.onPrepareOptionsMenu(menu);
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 }

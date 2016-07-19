@@ -25,7 +25,6 @@ public class SearchViewFilter extends Filter {
         filteredContactList.clear();
         final FilterResults results = new FilterResults();
 
-        //it does not matter if the first letter is lowerCase or upperCase
         for (final Contact item : contactList) {
             if (item.getName().trim().contains(constraint) || item.getName().toLowerCase().trim().contains(constraint) ) {
                 filteredContactList.add(item);
