@@ -34,17 +34,17 @@ public class MainActivity extends AppCompatActivity {
 
         //show fragment, if the fragment has already existed, find by TAG
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, new SplashFragment(), SPLESH).commit();
-
+            showFragmentWithoutBackStack(new SplashFragment(), SPLESH);
         } else {
             getSupportFragmentManager().findFragmentByTag(CONTACT);
         }
     }
-
-    public void showFragment(Fragment fragment, String TAG) {
+    public void showFragmentWithBackStack(Fragment fragment, String TAG) {
         getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_frame_layout, fragment, TAG).commit();
     }
-
+    public void showFragmentWithoutBackStack(Fragment fragment, String TAG) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, fragment, TAG).commit();
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

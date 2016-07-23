@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.seznam_kontaktu.seznamkontaktu">
 
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
     <application
         android:name="com.orm.SugarApp"
         android:allowBackup="true"

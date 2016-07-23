@@ -49,8 +49,7 @@ public class SplashFragment extends Fragment {
             @Override
             public void run() {
                 //((MainActivity) getActivity()).showFragment(new ContactListFragment(), CONTACT);
-                getFragmentManager().beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment(), CONTACT).commit();
-
+                ((MainActivity) getActivity()).showFragmentWithoutBackStack(new ContactListFragment(), CONTACT);
             }
         }, 1500);
     }

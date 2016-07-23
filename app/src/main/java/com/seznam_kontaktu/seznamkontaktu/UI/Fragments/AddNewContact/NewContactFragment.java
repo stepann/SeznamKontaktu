@@ -3,7 +3,6 @@ package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,19 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NewContactFragment extends Fragment {
 
     public static final String CONTACT = "contact";
 
-    EditText name, number, email;
+    @BindView(R.id.ed_name) EditText name;
+    @BindView(R.id.ed_number) EditText number;
+    @BindView(R.id.ed_email) EditText email;
+    
     String mName, mNumber, mEmail;
     boolean isFavourite = true;
 
@@ -42,6 +44,7 @@ public class NewContactFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -49,10 +52,6 @@ public class NewContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_contact, container, false);
-
-        name = (EditText) view.findViewById(R.id.ed_name);
-        number = (EditText) view.findViewById(R.id.ed_number);
-        email = (EditText) view.findViewById(R.id.ed_email);
 
         return view;
     }
@@ -78,9 +77,8 @@ public class NewContactFragment extends Fragment {
                 if(checkInputs()) {
                     Contact contact = new Contact(mName, mNumber, mEmail, isFavourite);
                     contact.save();
-                    getFragmentManager().popBackStack();
-                    getFragmentManager().beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment(), CONTACT).commit();
-
+                    getFragmentManager().popBackStack(); //delete backStack
+                    ((MainActivity)getActivity()).showFragmentWithoutBackStack(new ContactListFragment(), CONTACT);
                 }
                 break;
 
@@ -113,7 +111,7 @@ public class NewContactFragment extends Fragment {
         mNumber = number.getText().toString();
         mEmail = email.getText().toString();
 
-        if(mName.isEmpty()) {
+        if(mName.isEmpty() || mName.trim().length()< 2) {
             Toast.makeText(getContext(), R.string.empty_name, Toast.LENGTH_SHORT).show();
             return false;
         }

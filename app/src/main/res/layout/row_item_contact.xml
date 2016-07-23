@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<data>
+    <import type="android.view.View"/>
+    <import type="com.seznam_kontaktu.seznamkontaktu.Model.Contact"/>
+
+    <variable name="contact" type="Contact"/>
+</data>
+
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,13 +19,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- TODO: First letter big -->
-        <TextView
-            android:paddingLeft="10dp"
-            android:textSize="23sp"
-            android:id="@+id/contact_name"
+        <ImageView
+            android:visibility="@{contact.favourite ? View.VISIBLE : View.INVISIBLE}"
+            android:layout_gravity="center"
+            android:paddingLeft="8dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_star_black_18dp" />
+
+        <TextView
+            android:id="@+id/contact_name"
+            android:text="@={contact.name}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="23sp"/>
     </LinearLayout>
 
     <View
@@ -25,6 +41,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorDivider" />
-
  </LinearLayout>
 
+</layout>
