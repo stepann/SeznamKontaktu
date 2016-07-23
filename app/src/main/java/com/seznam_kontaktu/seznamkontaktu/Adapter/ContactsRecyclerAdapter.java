@@ -83,4 +83,8 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
     public void filterList(String text) {
         filter.filter(text);
     }
-  }
+
+    public List<Contact> getContactsFiltered() {
+        return mContactsFiltered;
+    }
+}
