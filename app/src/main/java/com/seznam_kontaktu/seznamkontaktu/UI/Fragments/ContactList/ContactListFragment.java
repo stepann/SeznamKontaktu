@@ -48,10 +48,11 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     RecyclerView recyclerView;
     String name, number, email;
 
+
     private List<Contact> mContact = new ArrayList<>();
+    private List<Contact> mContactFiltered = new ArrayList<>();
 
     private ContactsRecyclerAdapter mAdapter;
-
 
     public static ContactListFragment newInstance() {
         Bundle args = new Bundle();
@@ -68,7 +69,8 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
-        
+
+
         fabButton = (FloatingActionButton) view.findViewById(R.id.fab_button);
         fabButton.setOnClickListener(this);
 
@@ -86,7 +88,8 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
             @Override
             public void onItemClick(View itemView, int position) {
 
-                Contact contact = SugarRecord.findById(Contact.class, (long) position+1);
+                Contact contact = mContact.get(position);
+
                 name = contact.getName();
                 number = contact.getNumber();
                 email = contact.getEmail();

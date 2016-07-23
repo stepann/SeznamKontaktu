@@ -31,6 +31,9 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
     SearchViewFilter filter;
     Context mContext;
 
+     public ContactsRecyclerAdapter() {
+    }
+
     public ContactsRecyclerAdapter(Context context, List<Contact> contact) {
         this.mContext = context;
         this.mContacts = contact;
@@ -77,7 +80,7 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
     }
 
     public void setList(List<Contact> contact) {
-        this.mContacts = contact;
+        this.mContactsFiltered = contact;
     }
 
     public void filterList(String text) {
