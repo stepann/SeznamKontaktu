@@ -7,12 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.databinding.library.baseAdapters.BR;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
-import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.SearchViewFilter.SearchViewFilter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecyclerAdapter.BindingHolder> {
@@ -27,18 +28,11 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
     }
 
     private List<Contact> mContacts;
-    private List<Contact> mContactsFiltered;
-    SearchViewFilter filter;
     Context mContext;
-
-     public ContactsRecyclerAdapter() {
-    }
 
     public ContactsRecyclerAdapter(Context context, List<Contact> contact) {
         this.mContext = context;
         this.mContacts = contact;
-        this.mContactsFiltered = contact;
-        filter = new SearchViewFilter(mContacts, this);
     }
 
     public static class BindingHolder extends RecyclerView.ViewHolder {
@@ -60,7 +54,6 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
             return binding;
         }
     }
-
     @Override
     public BindingHolder onCreateViewHolder(ViewGroup parent, int type) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_contact, parent, false);
@@ -70,24 +63,19 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
 
     @Override
     public void onBindViewHolder(BindingHolder holder, int position) {
-        final Contact contact = mContactsFiltered.get(position);
+        final Contact contact = mContacts.get(position);
+
+        if(position == 0 || mContacts.get(position-1).getName().charAt(0) != contact.getName().charAt(0)) {
+            contact.setVisibleFirstLetter(true);
+        } else {
+            contact.setVisibleFirstLetter(false);
+        }
         holder.getBinding().setVariable(BR.contact, contact);
         holder.getBinding().executePendingBindings();
     }
+
     @Override
     public int getItemCount() {
-        return mContactsFiltered.size();
-    }
-
-    public void setList(List<Contact> contact) {
-        this.mContactsFiltered = contact;
-    }
-
-    public void filterList(String text) {
-        filter.filter(text);
-    }
-
-    public List<Contact> getContactsFiltered() {
-        return mContactsFiltered;
+        return mContacts.size();
     }
 }

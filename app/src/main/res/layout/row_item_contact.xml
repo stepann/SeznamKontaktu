@@ -4,7 +4,6 @@
 <data>
     <import type="android.view.View"/>
     <import type="com.seznam_kontaktu.seznamkontaktu.Model.Contact"/>
-
     <variable name="contact" type="Contact"/>
 </data>
 
@@ -12,28 +11,44 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp">
+    android:paddingTop="10dp"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:visibility="@{contact.favourite ? View.VISIBLE : View.INVISIBLE}"
-            android:layout_gravity="center"
-            android:paddingLeft="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_star_black_18dp" />
+        <TextView
+            android:id="@+id/firstLetter"
+            android:text="@{String.valueOf(contact.name.charAt(0))}"
+            android:visibility="@{contact.IsVisibleFirstLetter()? View.VISIBLE : View.INVISIBLE}"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/contact_name"
             android:text="@={contact.name}"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textSize="23sp"/>
+
+        <ImageView
+            android:visibility="@{contact.favourite ? View.VISIBLE : View.INVISIBLE}"
+            android:contentDescription="@string/action_favourite"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_star_black_18dp" />
+
     </LinearLayout>
 
     <View

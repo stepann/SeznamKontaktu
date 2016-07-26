@@ -1,26 +1,24 @@
 package com.seznam_kontaktu.seznamkontaktu.Model;
 
-import android.databinding.Bindable;
-
 import com.orm.SugarRecord;
-
-import butterknife.BindView;
+import com.orm.dsl.Ignore;
 
 public class Contact extends SugarRecord {
 
     public String name;
     private String number;
     private String email;
-    private boolean isFavourite;
+    private boolean favourite;
+    @Ignore private boolean visibleFirstLetter;
 
     public Contact() {
     }
 
-    public Contact(String name, String number, String email, boolean isFavourite) {
+    public Contact(String name, String number, String email, boolean favourite) {
         this.name = name;
         this.number = number;
         this.email = email;
-        this.isFavourite = isFavourite;
+        this.favourite = favourite;
     }
     public void setName(String name) {
         this.name = name;
@@ -35,9 +33,12 @@ public class Contact extends SugarRecord {
     }
 
     public void setFavourite(Boolean isFavourite) {
-        this.isFavourite = isFavourite;
+        this.favourite = isFavourite;
     }
 
+    public void setVisibleFirstLetter(Boolean visibleFirstLetter) {
+        this.visibleFirstLetter = visibleFirstLetter;
+    }
     public String getName() {
         return name;
     }
@@ -51,6 +52,11 @@ public class Contact extends SugarRecord {
     }
 
     public boolean getFavourite() {
-        return isFavourite;
+        return favourite;
     }
+
+    public boolean IsVisibleFirstLetter() {
+        return visibleFirstLetter;
+    }
+
 }

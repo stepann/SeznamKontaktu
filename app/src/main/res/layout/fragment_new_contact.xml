@@ -6,46 +6,42 @@
 
     <ImageView
         android:id="@+id/iv_person_image"
-        android:clickable="true"
-        android:src="@drawable/ic_perm_identity_black_48dp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
         android:layout_width="170dp"
         android:layout_height="93dp"
-        android:layout_gravity="center_horizontal|top"/>
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="30dp"
+        android:clickable="true"
+        android:gravity="center"
+        android:src="@drawable/ic_perm_identity_black_48dp"/>
 
     <LinearLayout
-        android:layout_marginTop="130dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp">
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="130dp"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/ed_name"
-            android:inputType="textPersonName"
-            android:hint="@string/name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:inputType="textPersonName"/>
 
         <EditText
             android:id="@+id/ed_number"
-            android:inputType="phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/telephone_number"/>
+            android:hint="@string/telephone_number"
+            android:inputType="phone"/>
 
         <EditText
             android:id="@+id/ed_email"
-            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"/>
-
-
-
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"/>
     </LinearLayout>
-
 
 </FrameLayout>

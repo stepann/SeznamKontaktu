@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -23,25 +24,24 @@ import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 
 public class ContactDialogFragment extends DialogFragment {
 
-    private static final String NEW_CONTACT = "newcontact";
     private static final int ACTION_CALL = 1;
 
     TextView mName, mNumber, mEmail;
     String name, number, email;
+    long positionID;
 
     public ContactDialogFragment() {
         //empty constructor
     }
 
-    public static ContactDialogFragment newInstance(String name, String number, String email) {
+    public static ContactDialogFragment newInstance(Long position) {
         ContactDialogFragment fragment = new ContactDialogFragment();
         Bundle args = new Bundle();
-        args.putString("name", name);
-        args.putString("number", number);
-        args.putString("email", email);
+        args.putLong("position", position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +66,7 @@ public class ContactDialogFragment extends DialogFragment {
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_detail_contact, null);
 
@@ -74,18 +74,23 @@ public class ContactDialogFragment extends DialogFragment {
         mNumber = (TextView)view.findViewById(R.id.tv_number);
         mEmail = (TextView)view.findViewById(R.id.tv_email);
 
-        name = getArguments().getString("name");
-        number =getArguments().getString("number");
-        email = getArguments().getString("email");
+        positionID = getArguments().getLong("position");
+
+        Contact contact = Contact.findById(Contact.class, positionID);
+        name = contact.getName();
+        number = contact.getNumber();
+        email = contact.getEmail();
 
         mName.setText(name);
         mNumber.setText(number);
         mEmail.setText(email);
 
-        builder.setNeutralButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(R.string.dialog_deleteContact, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                Contact contact = SugarRecord.findById(Contact.class, positionID);
+                contact.delete();
+                getFragmentManager().beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment()).commit();
             }
         });
         builder.setNegativeButton(R.string.dialog_callContact, new DialogInterface.OnClickListener() {
@@ -97,9 +102,10 @@ public class ContactDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.dialog_editContact, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ((MainActivity) getActivity()).showFragmentWithBackStack(new NewContactFragment(), NEW_CONTACT);
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_frame_layout, new NewContactFragment().newInstance(positionID, true)).commit();
             }
         });
+
         builder.setView(view);
         return builder.create();
     }
@@ -114,8 +120,7 @@ public class ContactDialogFragment extends DialogFragment {
     public void getPermissionToCall() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, ACTION_CALL);
-        }
-        else {
+        } else {
             callContact(number);
         }
     }

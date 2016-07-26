@@ -1,27 +1,25 @@
 package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.orm.SugarRecord;
-
 import com.seznam_kontaktu.seznamkontaktu.Adapter.ContactsRecyclerAdapter;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
@@ -33,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import butterknife.ButterKnife;
 
@@ -41,16 +38,18 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
 
     private static final String NEW_CONTACT = "newcontact";
     private static final String DIALOG = "dialog";
-    boolean isSortByA = false;
 
     FloatingActionButton fabButton;
-    SearchView searchView;
+    EditText searchView;
+    ImageButton btnClearText;
     RecyclerView recyclerView;
+
     String name, number, email;
+    Long positionID;
+    Contact contact;
 
-
-    private List<Contact> mContact = new ArrayList<>();
-    private List<Contact> mContactFiltered = new ArrayList<>();
+    private List<Contact> mContact;
+    private List<Contact> dataSource;
 
     private ContactsRecyclerAdapter mAdapter;
 
@@ -63,6 +62,8 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContact = new ArrayList<>();
+        dataSource = new ArrayList<>();
         setHasOptionsMenu(true);
     }
 
@@ -70,35 +71,41 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
 
+        searchView = (EditText) view.findViewById(R.id.search);
 
         fabButton = (FloatingActionButton) view.findViewById(R.id.fab_button);
         fabButton.setOnClickListener(this);
 
-        searchView = (SearchView) view.findViewById(R.id.search_view);
+        btnClearText = (ImageButton) view.findViewById(R.id.ib_clearText);
+        btnClearText.setOnClickListener(this);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mContact = SugarRecord.listAll(Contact.class);
 
-        mAdapter = new ContactsRecyclerAdapter(getActivity(), mContact);
+        mAdapter = new ContactsRecyclerAdapter(getContext(), mContact);
         recyclerView.setAdapter(mAdapter);
+
+        sortList();
 
         //item click
         mAdapter.setOnItemClickListener(new ContactsRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-
-                Contact contact = mContact.get(position);
+                if (dataSource.isEmpty()) contact = mContact.get(position);
+                else contact = dataSource.get(position);
 
                 name = contact.getName();
                 number = contact.getNumber();
                 email = contact.getEmail();
-
+                positionID = contact.getId();
                 showAlertDialog();
             }
         });
 
-        searchFilter();
+        addTextListener();
+        resetID();
+
         return view;
     }
 
@@ -106,15 +113,26 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
         //show actionBar
         ((MainActivity) getActivity()).getSupportActionBar().show();
         //show title
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+
     }
 
     @Override
     public void onClick(View v) {
-        ((MainActivity) getActivity()).showFragmentWithBackStack(new NewContactFragment(), NEW_CONTACT);
+        switch (v.getId()) {
+            case R.id.fab_button:
+                getFragmentManager().popBackStack();
+                ((MainActivity) getActivity()).showFragmentWithBackStack(new NewContactFragment().newInstance(0L, false), NEW_CONTACT);
+                break;
+            case R.id.ib_clearText:
+                searchView.setText(null);
+                mAdapter.notifyDataSetChanged();
+                break;
+        }
     }
 
     @Override
@@ -126,21 +144,27 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter)
-            sortList();
+            reverseList();
             return super.onOptionsItemSelected(item);
     }
 
-    public void searchFilter() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+    public void addTextListener() {
+        searchView.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
             }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                mAdapter.filterList(newText);
-                return true;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+                dataSource.clear();
+                query = query.toString().toLowerCase();
+                for (int i = 0; i < mContact.size(); i++) {
+                    final String text = (mContact.get(i).getName().toLowerCase());
+                    if (text.contains(query)) {
+                        dataSource.add(mContact.get(i));
+                    }
+                }
+                recyclerViewRefresh();
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -152,27 +176,38 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
 
     private void showAlertDialog() {
         FragmentManager fragmentManager = getFragmentManager();
-        ContactDialogFragment contactDialogFragment = ContactDialogFragment.newInstance(name, number, email);
+        ContactDialogFragment contactDialogFragment = ContactDialogFragment.newInstance(positionID);
         contactDialogFragment.show(fragmentManager, DIALOG);
     }
 
-    public void sortList() {
-        if (mContact.size() > 0) {
-            if (!isSortByA) {
-                Collections.sort(mContact, new Comparator<Contact>() {
-                    @Override
-                    public int compare(Contact contact1, Contact contact2) {
-                        return contact1.getName().compareToIgnoreCase(contact2.getName());
-                    }
-                });
-                isSortByA = true;
-            } else {
-                Collections.reverse(mContact);
-                isSortByA = false;
-            }
-        }
+    @Override
+    public void onResume() {
         mAdapter.notifyDataSetChanged();
+        super.onResume();
     }
 
+    public void recyclerViewRefresh() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new ContactsRecyclerAdapter(getContext(), dataSource);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    public void resetID() {
+        //reset ID
+    }
+
+    public void sortList() {
+        Collections.sort(mContact, new Comparator<Contact>() {
+            @Override
+            public int compare(Contact contact1, Contact contact2) {
+                return contact1.getName().compareTo(contact2.getName());
+            }
+        });
+        mAdapter.notifyDataSetChanged();
+    }
+    public void reverseList() {
+        Collections.reverse(mContact);
+        mAdapter.notifyDataSetChanged();
+    }
 }
 

@@ -13,14 +13,13 @@
         android:theme="@style/AppTheme">
 
         <meta-data android:name="DATABASE" android:value="CONTACT.db" />
-        <meta-data android:name="VERSION" android:value="4" />
+        <meta-data android:name="VERSION" android:value="5" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.seznam_kontaktu" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

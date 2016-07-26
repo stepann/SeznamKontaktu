@@ -10,41 +10,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import com.orm.SugarRecord;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NewContactFragment extends Fragment {
 
     public static final String CONTACT = "contact";
 
-    @BindView(R.id.ed_name) EditText name;
-    @BindView(R.id.ed_number) EditText number;
-    @BindView(R.id.ed_email) EditText email;
-    
+    EditText etName, etNumber, etEmail;
+
     String mName, mNumber, mEmail;
-    boolean isFavourite = true;
+    boolean isFavourite;
+    boolean editingContact;
+
+    Long positionID;
 
     public NewContactFragment() {
         // Required empty public constructor
     }
 
-    public static NewContactFragment newInstance() {
+    public static NewContactFragment newInstance(Long position, boolean isEditing) {
         NewContactFragment fragment = new NewContactFragment();
-        Bundle bundle = new Bundle();
-        fragment.setArguments(bundle);
+        Bundle args = new Bundle();
+        args.putLong("position", position);
+        args.putBoolean("isEditing", isEditing);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
         super.onCreate(savedInstanceState);
     }
 
@@ -53,9 +55,28 @@ public class NewContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_contact, container, false);
 
+        editingContact = getArguments().getBoolean("isEditing");
+        positionID = getArguments().getLong("position");
+
+        etName = (EditText) view.findViewById(R.id.ed_name);
+        etNumber = (EditText) view.findViewById(R.id.ed_number);
+        etEmail = (EditText) view.findViewById(R.id.ed_email);
+
+        if (editingContact) {
+            Contact contact = Contact.findById(Contact.class, positionID);
+            String name = contact.getName();
+            String number = contact.getNumber();
+            String email = contact.getEmail();
+            isFavourite = contact.getFavourite();
+
+            etName.setText(name);
+            etNumber.setText(number);
+            etEmail.setText(email);
+
+
+        }
         return view;
     }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -74,17 +95,29 @@ public class NewContactFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                if(checkInputs()) {
-                    Contact contact = new Contact(mName, mNumber, mEmail, isFavourite);
-                    contact.save();
+                if (checkInputs()) {
+                    if (editingContact) {
+                        //edit contact
+                        Contact contact = SugarRecord.findById(Contact.class, positionID);
+                        contact.setName(mName);
+                        contact.setNumber(mNumber);
+                        contact.setEmail(mEmail);
+                        contact.setFavourite(isFavourite);
+                        contact.save();
+                    } else {
+                        //save new contact
+                        Contact contact = new Contact(mName, mNumber, mEmail, isFavourite);
+                        contact.save();
+                    }
                     getFragmentManager().popBackStack(); //delete backStack
-                    ((MainActivity)getActivity()).showFragmentWithoutBackStack(new ContactListFragment(), CONTACT);
+                    ((MainActivity) getActivity()).showFragmentWithoutBackStack(new ContactListFragment(), CONTACT);
                 }
                 break;
 
             case R.id.action_favourite:
-                 getActivity().invalidateOptionsMenu();
-                 break;
+                isFavourite = !isFavourite;
+                getActivity().invalidateOptionsMenu();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -92,11 +125,9 @@ public class NewContactFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         if (isFavourite) {
-            menu.getItem(0).setIcon(R.drawable.ic_star_border_white_24dp);
-            isFavourite = false;
-        } else {
             menu.getItem(0).setIcon(R.drawable.ic_star_white_24dp);
-            isFavourite = true;
+        } else {
+            menu.getItem(0).setIcon(R.drawable.ic_star_border_white_24dp);
         }
         super.onPrepareOptionsMenu(menu);
     }
@@ -107,16 +138,20 @@ public class NewContactFragment extends Fragment {
     }
 
     public boolean checkInputs() {
-        mName = name.getText().toString();
-        mNumber = number.getText().toString();
-        mEmail = email.getText().toString();
+        mName = etName.getText().toString();
+        mNumber = etNumber.getText().toString();
+        mEmail = etEmail.getText().toString();
 
-        if(mName.isEmpty() || mName.trim().length()< 2) {
-            Toast.makeText(getContext(), R.string.empty_name, Toast.LENGTH_SHORT).show();
+        if (mName.isEmpty() || mName.trim().length() <= 2) {
+            etName.setError(getText(R.string.empty_name));
             return false;
         }
-        if(mNumber.isEmpty()) {
-            Toast.makeText(getContext(), R.string.empty_number, Toast.LENGTH_SHORT).show();
+        if (mNumber.isEmpty()) {
+            etNumber.setText(getText(R.string.empty_number));
+            return false;
+        }
+        if (!mEmail.isEmpty() && !mEmail.contains("@")) {
+            etEmail.setError(getText(R.string.invalid_email));
             return false;
         }
         return true;
