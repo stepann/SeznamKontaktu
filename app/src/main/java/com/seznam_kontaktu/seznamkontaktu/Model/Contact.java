@@ -5,21 +5,24 @@ import com.orm.dsl.Ignore;
 
 public class Contact extends SugarRecord {
 
-    public String name;
+    private String name;
     private String number;
     private String email;
     private boolean favourite;
     @Ignore private boolean visibleFirstLetter;
+    private String imageUri;
 
     public Contact() {
     }
 
-    public Contact(String name, String number, String email, boolean favourite) {
+    public Contact(String name, String number, String email, boolean favourite, String imageUri) {
         this.name = name;
         this.number = number;
         this.email = email;
         this.favourite = favourite;
+        this.imageUri = imageUri;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -43,10 +46,8 @@ public class Contact extends SugarRecord {
         return name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmail() { return email;
     }
-
     public String getNumber() {
         return number;
     }
@@ -55,8 +56,11 @@ public class Contact extends SugarRecord {
         return favourite;
     }
 
-    public boolean IsVisibleFirstLetter() {
+    public boolean isVisibleFirstLetter() {
         return visibleFirstLetter;
     }
 
+    public String getImageUri() { return imageUri; }
+
+    public void setImageUri(String imageUri) { this.imageUri = imageUri;}
 }

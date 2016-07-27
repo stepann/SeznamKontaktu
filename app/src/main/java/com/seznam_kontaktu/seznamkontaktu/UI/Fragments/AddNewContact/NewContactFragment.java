@@ -1,8 +1,18 @@
 package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,14 +28,17 @@ import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NewContactFragment extends Fragment {
 
     public static final String CONTACT = "contact";
+    private static final int RESULT_LOAD_IMAGE = 1;
 
     EditText etName, etNumber, etEmail;
+    CircleImageView ivAvatar;
 
-    String mName, mNumber, mEmail;
+    String mName, mNumber, mEmail, picturePath;
     boolean isFavourite;
     boolean editingContact;
 
@@ -58,6 +71,7 @@ public class NewContactFragment extends Fragment {
         editingContact = getArguments().getBoolean("isEditing");
         positionID = getArguments().getLong("position");
 
+        ivAvatar = (de.hdodenhof.circleimageview.CircleImageView)view.findViewById(R.id.iv_person_image);
         etName = (EditText) view.findViewById(R.id.ed_name);
         etNumber = (EditText) view.findViewById(R.id.ed_number);
         etEmail = (EditText) view.findViewById(R.id.ed_email);
@@ -67,14 +81,26 @@ public class NewContactFragment extends Fragment {
             String name = contact.getName();
             String number = contact.getNumber();
             String email = contact.getEmail();
+            picturePath = contact.getImageUri();
             isFavourite = contact.getFavourite();
 
             etName.setText(name);
             etNumber.setText(number);
             etEmail.setText(email);
-
-
+            ivAvatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
+
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RESULT_LOAD_IMAGE);
+                } else {
+                    Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                }
+            }
+        });
         return view;
     }
     @Override
@@ -103,10 +129,16 @@ public class NewContactFragment extends Fragment {
                         contact.setNumber(mNumber);
                         contact.setEmail(mEmail);
                         contact.setFavourite(isFavourite);
+                        contact.setImageUri(picturePath);
                         contact.save();
                     } else {
                         //save new contact
-                        Contact contact = new Contact(mName, mNumber, mEmail, isFavourite);
+                        Contact contact = new Contact();
+                        contact.setName(mName);
+                        contact.setNumber(mNumber);
+                        contact.setEmail(mEmail);
+                        contact.setFavourite(isFavourite);
+                        contact.setImageUri(picturePath);
                         contact.save();
                     }
                     getFragmentManager().popBackStack(); //delete backStack
@@ -147,7 +179,7 @@ public class NewContactFragment extends Fragment {
             return false;
         }
         if (mNumber.isEmpty()) {
-            etNumber.setText(getText(R.string.empty_number));
+            etNumber.setError(getText(R.string.empty_number));
             return false;
         }
         if (!mEmail.isEmpty() && !mEmail.contains("@")) {
@@ -155,5 +187,39 @@ public class NewContactFragment extends Fragment {
             return false;
         }
         return true;
+    }
+    //permission PHOTO/MEDIA/FILES
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (requestCode == RESULT_LOAD_IMAGE) {
+            if (grantResults.length == 1 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                boolean showRationale = shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private boolean shouldShowRequestPermissionRationale(NewContactFragment newContactFragment, String readExternalStorage) {
+        return true;
+    }
+
+    //select image from gallery
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContext().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            picturePath = cursor.getString(columnIndex);
+
+            ivAvatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            cursor.close();
+        }
     }
 }

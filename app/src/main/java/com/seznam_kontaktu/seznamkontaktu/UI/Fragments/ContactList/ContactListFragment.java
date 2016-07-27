@@ -15,12 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.orm.SugarRecord;
-import com.seznam_kontaktu.seznamkontaktu.Adapter.ContactsRecyclerAdapter;
+import com.seznam_kontaktu.seznamkontaktu.Adapters.ContactsRecyclerAdapter;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
@@ -118,7 +118,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         ((MainActivity) getActivity()).getSupportActionBar().show();
         //show title
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-
     }
 
     @Override
@@ -130,7 +129,8 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.ib_clearText:
                 searchView.setText(null);
-                mAdapter.notifyDataSetChanged();
+                //hideKeyboard();
+                searchView.clearFocus();
                 break;
         }
     }
@@ -150,8 +150,7 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
 
     public void addTextListener() {
         searchView.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
             public void onTextChanged(CharSequence query, int start, int before, int count) {
@@ -205,9 +204,20 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         });
         mAdapter.notifyDataSetChanged();
     }
+
     public void reverseList() {
-        Collections.reverse(mContact);
-        mAdapter.notifyDataSetChanged();
+        if(!dataSource.isEmpty()) {
+            Collections.reverse(dataSource);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            Collections.reverse(mContact);
+            mAdapter.notifyDataSetChanged();
+        }
     }
+    public void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+    }
+
 }
 

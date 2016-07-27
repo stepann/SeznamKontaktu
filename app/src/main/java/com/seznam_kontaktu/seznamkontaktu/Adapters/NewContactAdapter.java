@@ -1,4 +1,4 @@
-package com.seznam_kontaktu.seznamkontaktu.Adapter;
+package com.seznam_kontaktu.seznamkontaktu.Adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -7,30 +7,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.android.databinding.library.baseAdapters.BR;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecyclerAdapter.BindingHolder> {
-
-    private static OnItemClickListener listener;
-
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
-    }
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        ContactsRecyclerAdapter.listener = listener;
-    }
+public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.BindingHolder> {
 
     private List<Contact> mContacts;
     Context mContext;
 
-    public ContactsRecyclerAdapter(Context context, List<Contact> contact) {
+    public NewContactAdapter(Context context, List<Contact> contact) {
         this.mContext = context;
         this.mContacts = contact;
     }
@@ -42,14 +31,9 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
             super(rowView);
             binding = DataBindingUtil.bind(rowView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null)
-                        listener.onItemClick(itemView, getAdapterPosition());
-                }
-            });
+            //implement click listener here
         }
+
         public ViewDataBinding getBinding() {
             return binding;
         }
@@ -65,11 +49,6 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
     public void onBindViewHolder(BindingHolder holder, int position) {
         final Contact contact = mContacts.get(position);
 
-        if(position == 0 || mContacts.get(position-1).getName().charAt(0) != contact.getName().charAt(0)) {
-            contact.setVisibleFirstLetter(true);
-        } else {
-            contact.setVisibleFirstLetter(false);
-        }
         holder.getBinding().setVariable(BR.contact, contact);
         holder.getBinding().executePendingBindings();
     }
