@@ -41,7 +41,6 @@ public class NewContactFragment extends Fragment {
     String mName, mNumber, mEmail, picturePath;
     boolean isFavourite;
     boolean editingContact;
-
     Long positionID;
 
     public NewContactFragment() {
@@ -68,26 +67,17 @@ public class NewContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_contact, container, false);
 
+        etName = (EditText)view.findViewById(R.id.ed_name);
+        etNumber = (EditText)view.findViewById(R.id.ed_number);
+        etEmail = (EditText)view.findViewById(R.id.ed_email);
+        ivAvatar = (CircleImageView)view.findViewById(R.id.iv_person_image);
+
         editingContact = getArguments().getBoolean("isEditing");
         positionID = getArguments().getLong("position");
 
-        ivAvatar = (de.hdodenhof.circleimageview.CircleImageView)view.findViewById(R.id.iv_person_image);
-        etName = (EditText) view.findViewById(R.id.ed_name);
-        etNumber = (EditText) view.findViewById(R.id.ed_number);
-        etEmail = (EditText) view.findViewById(R.id.ed_email);
-
         if (editingContact) {
-            Contact contact = Contact.findById(Contact.class, positionID);
-            String name = contact.getName();
-            String number = contact.getNumber();
-            String email = contact.getEmail();
-            picturePath = contact.getImageUri();
-            isFavourite = contact.getFavourite();
-
-            etName.setText(name);
-            etNumber.setText(number);
-            etEmail.setText(email);
-            ivAvatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            getContact();
+            fillViews();
         }
 
         ivAvatar.setOnClickListener(new View.OnClickListener() {
@@ -101,8 +91,10 @@ public class NewContactFragment extends Fragment {
                 }
             }
         });
+
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -123,29 +115,15 @@ public class NewContactFragment extends Fragment {
             case R.id.action_done:
                 if (checkInputs()) {
                     if (editingContact) {
-                        //edit contact
-                        Contact contact = SugarRecord.findById(Contact.class, positionID);
-                        contact.setName(mName);
-                        contact.setNumber(mNumber);
-                        contact.setEmail(mEmail);
-                        contact.setFavourite(isFavourite);
-                        contact.setImageUri(picturePath);
-                        contact.save();
+                        saveEditedContact();
                     } else {
-                        //save new contact
-                        Contact contact = new Contact();
-                        contact.setName(mName);
-                        contact.setNumber(mNumber);
-                        contact.setEmail(mEmail);
-                        contact.setFavourite(isFavourite);
-                        contact.setImageUri(picturePath);
-                        contact.save();
+                        saveNewContact();
                     }
+                    //delete backstack and show contact list
                     getFragmentManager().popBackStack(); //delete backStack
                     ((MainActivity) getActivity()).showFragmentWithoutBackStack(new ContactListFragment(), CONTACT);
                 }
                 break;
-
             case R.id.action_favourite:
                 isFavourite = !isFavourite;
                 getActivity().invalidateOptionsMenu();
@@ -169,6 +147,9 @@ public class NewContactFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    /*check inputs
+     @return true if inputs are okey
+     */
     public boolean checkInputs() {
         mName = etName.getText().toString();
         mNumber = etNumber.getText().toString();
@@ -188,6 +169,7 @@ public class NewContactFragment extends Fragment {
         }
         return true;
     }
+
     //permission PHOTO/MEDIA/FILES
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
@@ -211,7 +193,7 @@ public class NewContactFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContext().getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
             cursor.moveToFirst();
@@ -222,4 +204,44 @@ public class NewContactFragment extends Fragment {
             cursor.close();
         }
     }
+    //get contact from database
+    public void getContact() {
+        Contact contact = Contact.findById(Contact.class, positionID);
+        mName = contact.getName();
+        mNumber = contact.getPhoneNumber();
+        mEmail = contact.getEmail();
+        picturePath = contact.getImagePath();
+        isFavourite = contact.isFavourite();
+    }
+
+    //set text to EditTexts and load avatar
+    public void fillViews() {
+        etName.setText(mName);
+        etNumber.setText(mNumber);
+        etEmail.setText(mEmail);
+        if (!(picturePath == null)) ivAvatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+    }
+
+    //save edited contact to position by ID
+    public void saveEditedContact() {
+        Contact contact = SugarRecord.findById(Contact.class, positionID);
+        contact.setName(mName);
+        contact.setPhoneNumber(mNumber);
+        contact.setEmail(mEmail);
+        contact.setFavourite(isFavourite);
+        contact.setImagePath(picturePath);
+        contact.save();
+    }
+
+    //save new contact
+    public void saveNewContact() {
+        Contact contact = new Contact();
+        contact.setName(mName);
+        contact.setPhoneNumber(mNumber);
+        contact.setEmail(mEmail);
+        contact.setFavourite(isFavourite);
+        contact.setImagePath(picturePath);
+        contact.save();
+    }
 }
+

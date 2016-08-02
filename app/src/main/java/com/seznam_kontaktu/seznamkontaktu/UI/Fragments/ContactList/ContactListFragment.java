@@ -15,12 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.orm.SugarRecord;
-import com.seznam_kontaktu.seznamkontaktu.Adapters.ContactsRecyclerAdapter;
+import com.seznam_kontaktu.seznamkontaktu.Adapter.ContactsRecyclerAdapter;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
@@ -96,7 +95,7 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
                 else contact = dataSource.get(position);
 
                 name = contact.getName();
-                number = contact.getNumber();
+                number = contact.getPhoneNumber();
                 email = contact.getEmail();
                 positionID = contact.getId();
                 showAlertDialog();
@@ -129,7 +128,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.ib_clearText:
                 searchView.setText(null);
-                //hideKeyboard();
                 searchView.clearFocus();
                 break;
         }
@@ -145,14 +143,17 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter)
             reverseList();
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     public void addTextListener() {
         searchView.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
+
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             public void onTextChanged(CharSequence query, int start, int before, int count) {
                 dataSource.clear();
                 query = query.toString().toLowerCase();
@@ -206,17 +207,13 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     }
 
     public void reverseList() {
-        if(!dataSource.isEmpty()) {
+        if (!dataSource.isEmpty()) {
             Collections.reverse(dataSource);
             mAdapter.notifyDataSetChanged();
         } else {
             Collections.reverse(mContact);
             mAdapter.notifyDataSetChanged();
         }
-    }
-    public void hideKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 
 }

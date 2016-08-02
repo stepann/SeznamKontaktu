@@ -1,4 +1,4 @@
-package com.seznam_kontaktu.seznamkontaktu.Adapters;
+package com.seznam_kontaktu.seznamkontaktu.Adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;

@@ -74,7 +74,7 @@ public class ContactDialogFragment extends DialogFragment {
 
         Contact contact = Contact.findById(Contact.class, positionID);
         name = contact.getName();
-        number = contact.getNumber();
+        number = contact.getPhoneNumber();
         email = contact.getEmail();
 
         mName.setText(name);

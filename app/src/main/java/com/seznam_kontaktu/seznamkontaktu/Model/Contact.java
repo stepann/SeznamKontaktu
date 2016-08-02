@@ -3,40 +3,42 @@ package com.seznam_kontaktu.seznamkontaktu.Model;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 
+import java.util.List;
+
 public class Contact extends SugarRecord {
 
     private String name;
-    private String number;
+    private String phoneNumber;
     private String email;
     private boolean favourite;
+    private String imagePath;
     @Ignore private boolean visibleFirstLetter;
-    private String imageUri;
+    public List<ContactItem> items;
 
     public Contact() {
+        //empty constructor 
     }
 
-    public Contact(String name, String number, String email, boolean favourite, String imageUri) {
+    public Contact(String name, String number, String email, boolean favourite, String imagePath) {
         this.name = name;
-        this.number = number;
+        this.phoneNumber = number;
         this.email = email;
         this.favourite = favourite;
-        this.imageUri = imageUri;
+        this.imagePath = imagePath;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) {this.name = name; }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public void setFavourite(Boolean isFavourite) {
-        this.favourite = isFavourite;
+    public void setFavourite(Boolean favourite) {
+        this.favourite = favourite;
     }
 
     public void setVisibleFirstLetter(Boolean visibleFirstLetter) {
@@ -46,21 +48,24 @@ public class Contact extends SugarRecord {
         return name;
     }
 
-    public String getEmail() { return email;
-    }
-    public String getNumber() {
-        return number;
+    public String getEmail() { return email; }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public boolean getFavourite() {
-        return favourite;
-    }
+    public boolean isFavourite() { return favourite; }
 
     public boolean isVisibleFirstLetter() {
         return visibleFirstLetter;
     }
 
-    public String getImageUri() { return imageUri; }
+    public String getImagePath() { return imagePath; }
 
-    public void setImageUri(String imageUri) { this.imageUri = imageUri;}
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
+    public List<ContactItem> getItems() {
+            return items;
+    }
+
 }
