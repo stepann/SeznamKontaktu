@@ -12,24 +12,35 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.orm.SugarRecord;
+import com.seznam_kontaktu.seznamkontaktu.Adapter.DialogAdapter;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
+import com.seznam_kontaktu.seznamkontaktu.Model.ContactItem;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactDialogFragment extends DialogFragment {
 
     private static final int ACTION_CALL = 1;
 
-    TextView mName, mNumber, mEmail;
+    TextView mName, mEmail;
     String name, number, email;
+    RecyclerView recyclerView;
     long positionID;
+
+    List<ContactItem> items;
+    DialogAdapter mAdapter;
 
     public ContactDialogFragment() {
         //empty constructor
@@ -48,9 +59,16 @@ public class ContactDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_detail_contact, container, false);
+
+        //item click
+        mAdapter.setOnItemClickListener(new DialogAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                getPermissionToCall(position);
+            }
+        });
 
         return view;
     }
@@ -61,38 +79,38 @@ public class ContactDialogFragment extends DialogFragment {
 
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
+        items = new ArrayList<>();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_detail_contact, null);
 
         mName = (TextView)view.findViewById(R.id.tv_name);
-        mNumber = (TextView)view.findViewById(R.id.tv_number);
         mEmail = (TextView)view.findViewById(R.id.tv_email);
-
         positionID = getArguments().getLong("position");
 
+        //get name and email from Contact
         Contact contact = Contact.findById(Contact.class, positionID);
         name = contact.getName();
-        number = contact.getPhoneNumber();
         email = contact.getEmail();
 
+        //set them to the views
         mName.setText(name);
-        mNumber.setText(number);
         mEmail.setText(email);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        items = ContactItem.find(ContactItem.class, "contact = ?", String.valueOf(positionID));
+        mAdapter = new DialogAdapter(getContext(), items);
+        recyclerView.setAdapter(mAdapter);
 
         builder.setNeutralButton(R.string.dialog_deleteContact, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Contact contact = SugarRecord.findById(Contact.class, positionID);
+                ContactItem.deleteAll(ContactItem.class, "contact = ?", String.valueOf(positionID));
                 contact.delete();
                 getFragmentManager().beginTransaction().replace(R.id.main_frame_layout, new ContactListFragment()).commit();
-            }
-        });
-        builder.setNegativeButton(R.string.dialog_callContact, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getPermissionToCall();
             }
         });
         builder.setPositiveButton(R.string.dialog_editContact, new DialogInterface.OnClickListener() {
@@ -113,13 +131,15 @@ public class ContactDialogFragment extends DialogFragment {
         startActivity(callIntent);
     }
 
-    public void getPermissionToCall() {
+    public void getPermissionToCall(int position) {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, ACTION_CALL);
         } else {
-            callContact(number);
+            ContactItem contactItem = ContactItem.findById(ContactItem.class, position);
+            callContact(String.valueOf(contactItem));
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (requestCode == ACTION_CALL) {

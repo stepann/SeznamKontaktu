@@ -43,7 +43,7 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
     ImageButton btnClearText;
     RecyclerView recyclerView;
 
-    String name, number, email;
+    String name;
     Long positionID;
     Contact contact;
 
@@ -81,7 +81,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mContact = SugarRecord.listAll(Contact.class);
-
         mAdapter = new ContactsRecyclerAdapter(getContext(), mContact);
         recyclerView.setAdapter(mAdapter);
 
@@ -95,15 +94,12 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
                 else contact = dataSource.get(position);
 
                 name = contact.getName();
-                number = contact.getPhoneNumber();
-                email = contact.getEmail();
                 positionID = contact.getId();
                 showAlertDialog();
             }
         });
 
         addTextListener();
-        resetID();
 
         return view;
     }
@@ -192,10 +188,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         recyclerView.setAdapter(mAdapter);
     }
 
-    public void resetID() {
-        //reset ID
-    }
-
     public void sortList() {
         Collections.sort(mContact, new Comparator<Contact>() {
             @Override
@@ -215,6 +207,5 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
             mAdapter.notifyDataSetChanged();
         }
     }
-
 }
 

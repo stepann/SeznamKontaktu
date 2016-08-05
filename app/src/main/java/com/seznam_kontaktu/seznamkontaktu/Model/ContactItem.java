@@ -1,51 +1,42 @@
 package com.seznam_kontaktu.seznamkontaktu.Model;
 
-public class ContactItem {
+import com.orm.SugarRecord;
 
-    String content;
+public class ContactItem extends SugarRecord {
+
+    String item;
     Integer type;
-    private Contact contact;
-
-    public static final Integer HOME = 0;
-    public static final Integer WORK = 1;
-    public static final Integer EMAIL = 2;
-    public static final Integer FAX = 3;
+    Contact contact;
 
     public ContactItem() {
-        //empty constructor
     }
 
-    public ContactItem(Integer type, String content) {
+    public ContactItem(String item, Integer type) {
+        this.item = item;
         this.type = type;
-        this.content = content;
+    }
+
+    public Integer getType() {
+        return type;
     }
 
     public void setType(Integer type) {
         this.type = type;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getItem() {
+        return item;
     }
 
-    public static Integer getHOME() {
-        return HOME;
+    public void setItem(String item) {
+        this.item = item;
     }
 
-    public static Integer getWORK() { return WORK; }
-
-    public static Integer getFAX() { return FAX; }
-
-    public static Integer getEMAIL() {
-        return EMAIL;
+    public Contact getContact() {
+        return contact;
     }
 
-    public String getContent() { return content; }
-
-    public Integer getType() { return type; }
-
-    public Contact getContact() { return contact; }
-
-    public void setContact(Contact contact) { this.contact = contact; }
-
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
 }

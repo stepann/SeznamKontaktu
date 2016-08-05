@@ -1,60 +1,76 @@
 package com.seznam_kontaktu.seznamkontaktu.Adapter;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 
-import com.android.databinding.library.baseAdapters.BR;
-import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
+import com.seznam_kontaktu.seznamkontaktu.Model.ContactItem;
 import com.seznam_kontaktu.seznamkontaktu.R;
 
 import java.util.List;
 
-public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.BindingHolder> {
+public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.ViewHolder> {
 
-    private List<Contact> mContacts;
+    ArrayAdapter<String> adapter;
+    public String[] spinnerItems;
+    private List<ContactItem> items;
     Context mContext;
 
-    public NewContactAdapter(Context context, List<Contact> contact) {
+    public NewContactAdapter(Context context, List<ContactItem> contactItems) {
         this.mContext = context;
-        this.mContacts = contact;
+        this.items = contactItems;
+        this.spinnerItems = new String[]{"PRÁCE", "OSOBNÍ", "DOMŮ", "FAX"};
+        this.adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerItems);
     }
 
-    public static class BindingHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        EditText phoneNumber;
+        Spinner spinner;
+        public ImageButton deleteBtn;
 
-        public BindingHolder(final View rowView) {
+        public ViewHolder(final View rowView) {
             super(rowView);
-            binding = DataBindingUtil.bind(rowView);
-
-            //implement click listener here
+            phoneNumber = (EditText) rowView.findViewById(R.id.ed_phoneNumber);
+            spinner = (Spinner) rowView.findViewById(R.id.spinner);
+            deleteBtn = (ImageButton) rowView.findViewById(R.id.imgButtonMinus);
         }
-
-        public ViewDataBinding getBinding() {
-            return binding;
-        }
-    }
-    @Override
-    public BindingHolder onCreateViewHolder(ViewGroup parent, int type) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_contact, parent, false);
-        BindingHolder holder = new BindingHolder(view);
-        return holder;
     }
 
     @Override
-    public void onBindViewHolder(BindingHolder holder, int position) {
-        final Contact contact = mContacts.get(position);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int type) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_new_contact, parent, false);
+        return new ViewHolder(view);
+    }
 
-        holder.getBinding().setVariable(BR.contact, contact);
-        holder.getBinding().executePendingBindings();
+    @Override
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final ContactItem contactItem = items.get(position);
+        holder.phoneNumber.setText(contactItem.getItem());
+
+        //delete item on position
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                items.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, items.size());
+            }
+        });
+        //spinner set data to adapter
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        holder.spinner.setAdapter(adapter);
     }
 
     @Override
     public int getItemCount() {
-        return mContacts.size();
+        return items.size();
     }
+
 }
+
