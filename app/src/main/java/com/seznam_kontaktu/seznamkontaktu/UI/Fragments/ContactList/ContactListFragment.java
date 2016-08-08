@@ -82,11 +82,12 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mContact = SugarRecord.listAll(Contact.class);
         mAdapter = new ContactsRecyclerAdapter(getContext(), mContact);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
 
         sortList();
 
-        //item click
+        //click on row item
         mAdapter.setOnItemClickListener(new ContactsRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {

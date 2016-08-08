@@ -1,18 +1,10 @@
 package com.seznam_kontaktu.seznamkontaktu;
 
-import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.widget.Toast;
 
-import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
-import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
-import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.SplashScreen.SplashFragment;
 
 
@@ -39,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().findFragmentByTag(CONTACT);
         }
     }
+
     public void showFragmentWithBackStack(Fragment fragment, String TAG) {
         getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.main_frame_layout, fragment, TAG).commit();
     }

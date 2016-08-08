@@ -4,23 +4,22 @@ import com.orm.SugarRecord;
 
 public class ContactItem extends SugarRecord {
 
-    String item;
-    Integer type;
+    String item, type;
     Contact contact;
 
     public ContactItem() {
     }
 
-    public ContactItem(String item, Integer type) {
+    public ContactItem(String item, String type) {
         this.item = item;
         this.type = type;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

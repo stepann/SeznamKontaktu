@@ -21,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -52,7 +51,6 @@ public class NewContactFragment extends Fragment {
     CircleImageView ivAvatar;
     RecyclerView recyclerView;
     NewContactAdapter mAdapter;
-    ArrayAdapter<String> adapterItems;
 
     String mName, mEmail, picturePath;
     boolean isFavourite;
@@ -60,6 +58,8 @@ public class NewContactFragment extends Fragment {
     Long positionID;
 
     List<ContactItem> itemList;
+    List<ContactItem> dataSource;
+
 
     public NewContactFragment() {
         // Required empty public constructor
@@ -78,6 +78,7 @@ public class NewContactFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         itemList = new ArrayList<>();
+        dataSource = new ArrayList<>();
         super.onCreate(savedInstanceState);
     }
 
@@ -86,26 +87,20 @@ public class NewContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_contact, container, false);
 
+        //ID's
         etName = (EditText)view.findViewById(R.id.ed_name);
         etEmail = (EditText)view.findViewById(R.id.ed_email);
         etPhone = (EditText) view.findViewById(R.id.ed_phoneNumber);
         spinner = (Spinner) view.findViewById(R.id.spinner);
         addButton = (Button) view.findViewById(R.id.btn);
-
         ivAvatar = (CircleImageView)view.findViewById(R.id.iv_person_image);
-
-        //spinner adapter
-        String item[] = {"PRÁCE", "OSOBNÍ", "DOMŮ", "FAX"};
-        adapterItems = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, item);
-        adapterItems.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapterItems);
 
         //recyclerView init
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new NewContactAdapter(getContext(), itemList);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setHasFixedSize(true);
+        itemList.add(new ContactItem());
+        setupAdapter();
 
         editingContact = getArguments().getBoolean("isEditing");
         positionID = getArguments().getLong("position");
@@ -115,6 +110,7 @@ public class NewContactFragment extends Fragment {
             fillViews();
         }
 
+        //add item to recyclerView
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,17 +188,16 @@ public class NewContactFragment extends Fragment {
     }
 
     /* input checking
-     * @return true if inputs are OK
+     @return true if inputs are OK
      */
     public boolean checkInputs() {
         mName = etName.getText().toString();
         mEmail = etEmail.getText().toString();
 
-        if (mName.isEmpty() || mName.trim().length() <= 2) {
+        if (mName.isEmpty() || mName.trim().length() < 2) {
             etName.setError(getText(R.string.empty_name));
             return false;
-        }
-        if (!mEmail.isEmpty() && !mEmail.contains("@")) {
+        } else if (!mEmail.contains("@")) {
             etEmail.setError(getText(R.string.invalid_email));
             return false;
         }
@@ -258,11 +253,28 @@ public class NewContactFragment extends Fragment {
         etName.setText(mName);
         etEmail.setText(mEmail);
         if (picturePath != null) ivAvatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        setupAdapter();
     }
 
     //save edited contact to position by ID
     public void saveEditedContact() {
         Contact contact = SugarRecord.findById(Contact.class, positionID);
+        saveContact(contact);
+
+        //delete all items from contact on the positionID
+        for (int i = 0; i < itemList.size(); i++) {
+            ContactItem.deleteAll(ContactItem.class, "contact = ?", String.valueOf(contact.getId()));
+        }
+        saveContactItems(contact);
+    }
+
+    public void saveNewContact() {
+        Contact contact = new Contact();
+        saveContact(contact);
+        saveContactItems(contact);
+    }
+
+    public void saveContact(Contact contact) {
         contact.setName(mName);
         contact.setEmail(mEmail);
         contact.setFavourite(isFavourite);
@@ -270,18 +282,19 @@ public class NewContactFragment extends Fragment {
         contact.save();
     }
 
-    public void saveNewContact() {
-        Contact contact = new Contact(mName, mEmail, isFavourite, picturePath);
-        itemList.size();
-
-        /* for (int i = 0; i < itemList.size(); i++) {
+    public void saveContactItems(Contact contact) {
+        for (int i = 0; i < itemList.size(); i++) {
             ContactItem contactItem = new ContactItem();
             contactItem.setContact(contact);
-            contactItem.setItem();
-            contactItem.setType();
-        }*/
+            contactItem.setItem(itemList.get(i).getItem());
+            contactItem.setType(itemList.get(i).getType());
+            contactItem.save();
+        }
+    }
 
-        contact.save();
+    public void setupAdapter() {
+        mAdapter = new NewContactAdapter(getContext(), itemList);
+        recyclerView.setAdapter(mAdapter);
     }
 
 }

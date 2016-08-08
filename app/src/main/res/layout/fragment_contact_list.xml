@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_search_white_24dp"
+                android:contentDescription="@string/image_description_searchView"
                 android:layout_marginTop="11dp"
                 android:layout_marginLeft="12dp"/>
 
@@ -48,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_clear_white_18dp"
+                android:contentDescription="@string/image_description_clearSearchView"
                 android:layout_marginTop="11dp"
                 android:layout_marginRight="20dp"/>
         </LinearLayout>

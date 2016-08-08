@@ -82,7 +82,6 @@ public class ContactDialogFragment extends DialogFragment {
         items = new ArrayList<>();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
-
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_detail_contact, null);
 
         mName = (TextView)view.findViewById(R.id.tv_name);
@@ -98,10 +97,12 @@ public class ContactDialogFragment extends DialogFragment {
         mName.setText(name);
         mEmail.setText(email);
 
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         items = ContactItem.find(ContactItem.class, "contact = ?", String.valueOf(positionID));
         mAdapter = new DialogAdapter(getContext(), items);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
 
         builder.setNeutralButton(R.string.dialog_deleteContact, new DialogInterface.OnClickListener() {
@@ -135,8 +136,8 @@ public class ContactDialogFragment extends DialogFragment {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, ACTION_CALL);
         } else {
-            ContactItem contactItem = ContactItem.findById(ContactItem.class, position);
-            callContact(String.valueOf(contactItem));
+            String contactItem = items.get(position).getItem();
+            callContact(contactItem);
         }
     }
 

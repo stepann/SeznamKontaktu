@@ -29,13 +29,12 @@
     <string name="dialog_deleteContact">Smazat</string>
     <!--start dialog contact-->
 
-    <!--start spinner list-->
-    <string-array name="contact_items">
-        <item>WORK</item>
-        <item>PERSONAL</item>
-        <item>FAX</item>
-        <item>HOME</item>
-    </string-array>
-    <!--end spinner list-->
+    <!--start ImageView content description-->
+    <string name="image_description_deleteButton">Smazat položku</string>
+    <string name="image_description_call">Volat</string>
+    <string name="image_description_clearSearchView">Smazat</string>
+    <string name="image_description_searchView">Hledat</string>
+    <!--end ImageView content description-->
+
 
 </resources>

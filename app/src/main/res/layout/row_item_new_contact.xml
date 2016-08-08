@@ -28,6 +28,7 @@
 
         <ImageButton
             android:id="@+id/imgButtonMinus"
+            android:contentDescription="@string/image_description_deleteButton"
             android:background="@drawable/ic_remove_circle_outline_black_18dp"
             android:layout_marginLeft="10dp"
             android:layout_width="18dp"
