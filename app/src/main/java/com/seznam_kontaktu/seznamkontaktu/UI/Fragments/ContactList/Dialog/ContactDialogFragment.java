@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,13 +31,17 @@ import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFr
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ContactDialogFragment extends DialogFragment {
 
     private static final int ACTION_CALL = 1;
 
     TextView mName, mEmail;
-    String name, number, email;
-    RecyclerView recyclerView;
+    String name, picturePath, email;
+
+    RecyclerView mRecyclerView;
+    CircleImageView avatar;
     long positionID;
 
     List<ContactItem> items;
@@ -84,26 +89,32 @@ public class ContactDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_detail_contact, null);
 
+        avatar = (CircleImageView) view.findViewById(R.id.iv_person_image);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mName = (TextView)view.findViewById(R.id.tv_name);
         mEmail = (TextView)view.findViewById(R.id.tv_email);
+        avatar = (CircleImageView) view.findViewById(R.id.iv_person_image);
         positionID = getArguments().getLong("position");
 
         //get name and email from Contact
         Contact contact = Contact.findById(Contact.class, positionID);
         name = contact.getName();
         email = contact.getEmail();
+        picturePath = contact.getImagePath();
 
         //set them to the views
         mName.setText(name);
         mEmail.setText(email);
 
+        //set avatar
+        if (picturePath != null) avatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         items = ContactItem.find(ContactItem.class, "contact = ?", String.valueOf(positionID));
         mAdapter = new DialogAdapter(getContext(), items);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mAdapter);
 
         builder.setNeutralButton(R.string.dialog_deleteContact, new DialogInterface.OnClickListener() {
             @Override

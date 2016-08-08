@@ -21,7 +21,7 @@ import java.util.List;
 
 public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.ViewHolder> {
 
-    ArrayList spinnerItems;
+    ArrayList<String> spinnerItems;
     ArrayAdapter adapter;
     ContactItem contactItem;
     Context mContext;
@@ -43,6 +43,22 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int type) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_new_contact, parent, false);
         return new ViewHolder(view);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        EditText phoneNumber;
+        Spinner spinner;
+        ImageButton deleteBtn;
+        EditTextListener listener;
+
+        public ViewHolder(View rowView) {
+            super(rowView);
+            phoneNumber = (EditText) rowView.findViewById(R.id.ed_phoneNumber);
+            spinner = (Spinner) rowView.findViewById(R.id.spinner);
+            deleteBtn = (ImageButton) rowView.findViewById(R.id.imgButtonMinus);
+            listener = new EditTextListener(phoneNumber);
+            phoneNumber.addTextChangedListener(listener);
+        }
     }
 
     @Override
@@ -67,7 +83,7 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
         holder.spinner.setAdapter(adapter);
 
         /*index of selected item from ArrayAdapter
-         returns -1 if nothing has been selected
+         returns -1 if nothing is selected
          */
         int selectedItem = adapter.getPosition(contactItem.getType());
         holder.spinner.setSelection(selectedItem);
@@ -93,29 +109,7 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
         return items.size();
     }
 
-    private void fillOptionsAdapter() {
-        spinnerItems.add("OSOBNÍ");
-        spinnerItems.add("DOMŮ");
-        spinnerItems.add("PRÁCE");
-        spinnerItems.add("FAX");
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        EditText phoneNumber;
-        Spinner spinner;
-        ImageButton deleteBtn;
-        EditTextListener listener;
-
-        public ViewHolder(View rowView) {
-            super(rowView);
-            phoneNumber = (EditText) rowView.findViewById(R.id.ed_phoneNumber);
-            spinner = (Spinner) rowView.findViewById(R.id.spinner);
-            deleteBtn = (ImageButton) rowView.findViewById(R.id.imgButtonMinus);
-            listener = new EditTextListener(phoneNumber);
-            phoneNumber.addTextChangedListener(listener);
-        }
-    }
-
+    //custom textWatcher to save data to items (List)
     private class EditTextListener implements TextWatcher {
 
         private int position;
@@ -136,16 +130,17 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 
-            if (charSequence.length() == 0) {
-                return;
-            }
+            if (charSequence.length() == 0) return;
+
             if (editText.getId() == R.id.ed_phoneNumber) {
                 if (String.valueOf(items.get(position).getItem()).equals(charSequence.toString())) {
-                    return;
+                    //do nothing
                 } else {
                     items.get(position).setItem(charSequence.toString());
                 }
+
             }
+
         }
 
         @Override
@@ -153,6 +148,13 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
         }
     }
 
+    //set ContactItem types to spinner adapter
+    private void fillOptionsAdapter() {
+        spinnerItems.add("OSOBNÍ");
+        spinnerItems.add("DOMŮ");
+        spinnerItems.add("PRÁCE");
+        spinnerItems.add("FAX");
+    }
 
 }
 

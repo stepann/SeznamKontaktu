@@ -8,24 +8,18 @@
 
     <!--start new_contact_fragment-->
     <string name="create_new_contact">Kontakt</string>
-    <string name="save_contact">Uložit</string>
     <string name="action_favourite">Označit jako oblíbený</string>
-    <string name="favourite">Oblíbený</string>
     <string name="action_done">Uložit</string>
     <string name="name">Jméno</string>
-    <string name="telephone_number">Telefonní číslo</string>
     <string name="email">Email</string>
     <string name="phone">Telefonní číslo</string>
-    <string name="cancel">Zrušit</string>
     <string name="empty_name">Neplatné jméno</string>
     <string name="empty_number">Doplň telefonní číslo</string>
     <string name="invalid_email">Neplatný email</string>
     <!--end start new_contact_fragment-->
 
     <!--start dialog contact-->
-    <string name="dialog_close">Zavřít</string>
     <string name="dialog_editContact">Upravit</string>
-    <string name="dialog_callContact">Volat</string>
     <string name="dialog_deleteContact">Smazat</string>
     <!--start dialog contact-->
 

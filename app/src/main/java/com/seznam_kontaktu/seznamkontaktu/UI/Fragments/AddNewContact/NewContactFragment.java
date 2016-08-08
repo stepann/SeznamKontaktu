@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.orm.SugarRecord;
 import com.seznam_kontaktu.seznamkontaktu.Adapter.NewContactAdapter;
@@ -58,8 +59,6 @@ public class NewContactFragment extends Fragment {
     Long positionID;
 
     List<ContactItem> itemList;
-    List<ContactItem> dataSource;
-
 
     public NewContactFragment() {
         // Required empty public constructor
@@ -78,7 +77,6 @@ public class NewContactFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         itemList = new ArrayList<>();
-        dataSource = new ArrayList<>();
         super.onCreate(savedInstanceState);
     }
 
@@ -199,6 +197,9 @@ public class NewContactFragment extends Fragment {
             return false;
         } else if (!mEmail.contains("@")) {
             etEmail.setError(getText(R.string.invalid_email));
+            return false;
+        } else if (itemList.get(0).getItem() == null) {
+            Toast.makeText(getContext(), R.string.empty_number, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

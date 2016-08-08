@@ -177,12 +177,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
         contactDialogFragment.show(fragmentManager, DIALOG);
     }
 
-    @Override
-    public void onResume() {
-        mAdapter.notifyDataSetChanged();
-        super.onResume();
-    }
-
     public void recyclerViewRefresh() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new ContactsRecyclerAdapter(getContext(), dataSource);
@@ -208,5 +202,6 @@ public class ContactListFragment extends Fragment implements View.OnClickListene
             mAdapter.notifyDataSetChanged();
         }
     }
+
 }
 
