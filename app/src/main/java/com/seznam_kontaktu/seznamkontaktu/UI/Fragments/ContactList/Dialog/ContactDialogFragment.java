@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +26,7 @@ import com.seznam_kontaktu.seznamkontaktu.Model.ContactItem;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,8 @@ public class ContactDialogFragment extends DialogFragment {
         mEmail.setText(email);
 
         //set avatar
-        if (picturePath != null) avatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        if (picturePath != null)
+            Picasso.with(getContext()).load("file://" + picturePath).into(avatar);
 
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

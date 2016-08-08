@@ -33,6 +33,7 @@ import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.Model.ContactItem;
 import com.seznam_kontaktu.seznamkontaktu.R;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,7 +254,8 @@ public class NewContactFragment extends Fragment {
     public void fillViews() {
         etName.setText(mName);
         etEmail.setText(mEmail);
-        if (picturePath != null) ivAvatar.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        if (picturePath != null)
+            Picasso.with(getContext()).load("file://" + picturePath).into(ivAvatar);
         setupAdapter();
     }
 
