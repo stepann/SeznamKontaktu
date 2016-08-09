@@ -1,4 +1,4 @@
-package com.seznam_kontaktu.seznamkontaktu.Adapter;
+package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

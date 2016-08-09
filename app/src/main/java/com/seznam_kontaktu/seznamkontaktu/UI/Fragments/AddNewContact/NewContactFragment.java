@@ -27,11 +27,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.orm.SugarRecord;
-import com.seznam_kontaktu.seznamkontaktu.Adapter.NewContactAdapter;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.Model.ContactItem;
 import com.seznam_kontaktu.seznamkontaktu.R;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.Adapter.NewContactAdapter;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 import com.squareup.picasso.Picasso;
 

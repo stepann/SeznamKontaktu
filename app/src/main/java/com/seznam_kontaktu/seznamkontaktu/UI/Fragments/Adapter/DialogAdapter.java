@@ -1,4 +1,4 @@
-package com.seznam_kontaktu.seznamkontaktu.Adapter;
+package com.seznam_kontaktu.seznamkontaktu.UI.Fragments.Adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -9,28 +9,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seznam_kontaktu.seznamkontaktu.BR;
-import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
+import com.seznam_kontaktu.seznamkontaktu.Model.ContactItem;
 import com.seznam_kontaktu.seznamkontaktu.R;
 
 import java.util.List;
 
-public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecyclerAdapter.BindingHolder> {
+public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.BindingHolder> {
 
     private static OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
-        ContactsRecyclerAdapter.listener = listener;
+        DialogAdapter.listener = listener;
     }
 
-    private List<Contact> mContacts;
+    private List<ContactItem> items;
     Context mContext;
 
-    public ContactsRecyclerAdapter(Context context, List<Contact> contact) {
+    public DialogAdapter(Context context, List<ContactItem> contactItems) {
         this.mContext = context;
-        this.mContacts = contact;
+        this.items = contactItems;
     }
 
     public static class BindingHolder extends RecyclerView.ViewHolder {
@@ -48,32 +49,28 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
                 }
             });
         }
+
         public ViewDataBinding getBinding() {
             return binding;
         }
     }
+
     @Override
     public BindingHolder onCreateViewHolder(ViewGroup parent, int type) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_dialog, parent, false);
         BindingHolder holder = new BindingHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(BindingHolder holder, int position) {
-        final Contact contact = mContacts.get(position);
-
-        if(position == 0 || mContacts.get(position-1).getName().charAt(0) != contact.getName().charAt(0)) {
-            contact.setVisibleFirstLetter(true);
-        } else {
-            contact.setVisibleFirstLetter(false);
-        }
-        holder.getBinding().setVariable(BR.contact, contact);
+        final ContactItem contactItem = items.get(position);
+        holder.getBinding().setVariable(BR.contactItem, contactItem);
         holder.getBinding().executePendingBindings();
     }
 
     @Override
     public int getItemCount() {
-        return mContacts.size();
+        return items.size();
     }
 }

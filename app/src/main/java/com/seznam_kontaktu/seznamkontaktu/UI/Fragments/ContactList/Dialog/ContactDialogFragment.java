@@ -20,10 +20,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.orm.SugarRecord;
-import com.seznam_kontaktu.seznamkontaktu.Adapter.DialogAdapter;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.Model.ContactItem;
 import com.seznam_kontaktu.seznamkontaktu.R;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.Adapter.DialogAdapter;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.ContactListFragment;
 import com.squareup.picasso.Picasso;

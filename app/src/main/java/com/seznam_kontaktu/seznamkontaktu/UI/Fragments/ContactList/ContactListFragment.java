@@ -19,10 +19,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.orm.SugarRecord;
-import com.seznam_kontaktu.seznamkontaktu.Adapter.ContactsRecyclerAdapter;
 import com.seznam_kontaktu.seznamkontaktu.MainActivity;
 import com.seznam_kontaktu.seznamkontaktu.Model.Contact;
 import com.seznam_kontaktu.seznamkontaktu.R;
+import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.Adapter.ContactsRecyclerAdapter;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.AddNewContact.NewContactFragment;
 import com.seznam_kontaktu.seznamkontaktu.UI.Fragments.ContactList.Dialog.ContactDialogFragment;
 
